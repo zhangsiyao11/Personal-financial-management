@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsy.finance.dao.SpendMapper">
+  <resultMap id="BaseResultMap" type="com.zsy.finance.bean.Spend">
+    <id column="spendid" jdbcType="INTEGER" property="spendid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="date" jdbcType="DATE" property="date" />
+    <result column="species" jdbcType="VARCHAR" property="species" />
+    <result column="money" jdbcType="INTEGER" property="money" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  <resultMap id="ResResultMap" type="com.zsy.finance.bean.Res">
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="event" jdbcType="VARCHAR" property="event" />
+  </resultMap>
+  <resultMap type="java.lang.String" id="StringResultMap">
+  	<result column="year" jdbcType="VARCHAR" property="year" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    spendid, username, date, species, money, note
+  </sql>
+  <select id="selectByExample" parameterType="com.zsy.finance.bean.SpendExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from spendinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from spendinfo
+    where username = #{username,jdbcType=VARCHAR}
+    ORDER BY date DESC
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from spendinfo
+    where spendid = #{spendid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from spendinfo
+    where spendid = #{spendid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zsy.finance.bean.SpendExample">
+    delete from spendinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zsy.finance.bean.Spend">
+    insert into spendinfo (spendid, username, date, 
+      species, money, note
+      )
+    values (#{spendid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{date,jdbcType=DATE}, 
+      #{species,jdbcType=VARCHAR}, #{money,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zsy.finance.bean.Spend">
+    insert into spendinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="spendid != null">
+        spendid,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="species != null">
+        species,
+      </if>
+      <if test="money != null">
+        money,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="spendid != null">
+        #{spendid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=DATE},
+      </if>
+      <if test="species != null">
+        #{species,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null">
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zsy.finance.bean.SpendExample" resultType="java.lang.Long">
+    select count(*) from spendinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <select id="countBySpecies" parameterType="java.lang.String" resultMap="ResResultMap">
+  	select count(*)as num ,species
+  	from spendinfo
+  	where username= #{username,jdbcType=VARCHAR}
+  	group by species
+  </select>
+  <select id="numOfYear" parameterType="java.lang.String" resultMap="StringResultMap">
+  	select year(date)as year
+  	from spendinfo
+  	where username= #{username,jdbcType=VARCHAR}
+  	group by year(date)
+  </select>
+  <select id="sumMoneyBySpecies" parameterType="java.lang.String" resultMap="ResResultMap">
+	select sum(money)as num,species as event
+	from spendinfo
+	where username= #{username,jdbcType=VARCHAR}
+  	group by species
+  </select>
+  <select id="sumMoneyByYear" parameterType="java.lang.String" resultMap="ResResultMap">
+	select sum(money)as num,year(date)as event
+	from spendinfo
+	where username= #{username,jdbcType=VARCHAR}
+  	group by year(date)
+  </select>
+  <select id="sumMoneyByMonth" parameterType="java.util.HashMap" resultMap="ResResultMap">
+	select sum(money)as num,month(date)as event
+	from spendinfo
+	where username= #{username,jdbcType=VARCHAR}
+	      and year(date)= #{year,jdbcType=VARCHAR}
+  	group by month(date)
+  </select>
+  <select id="sumMoneyBySpeciesWithYear" parameterType="java.util.HashMap" resultMap="ResResultMap">
+	select sum(money)as num,species as event
+	from spendinfo
+	where username= #{username,jdbcType=VARCHAR}
+	      and year(date)= #{year,jdbcType=VARCHAR}
+  	group by species
+  </select>
+  <select id="sumMoneyBySpeciesWithMonth" parameterType="java.util.HashMap" resultMap="ResResultMap">
+	select sum(money)as num,species as event
+	from spendinfo
+	where username= #{username,jdbcType=VARCHAR}
+	      and year(date)= #{year,jdbcType=VARCHAR}
+	      and month(date)= #{month,jdbcType=VARCHAR}
+  	group by species
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update spendinfo
+    <set>
+      <if test="record.spendid != null">
+        spendid = #{record.spendid,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.date != null">
+        date = #{record.date,jdbcType=DATE},
+      </if>
+      <if test="record.species != null">
+        species = #{record.species,jdbcType=VARCHAR},
+      </if>
+      <if test="record.money != null">
+        money = #{record.money,jdbcType=INTEGER},
+      </if>
+      <if test="record.note != null">
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update spendinfo
+    set spendid = #{record.spendid,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      date = #{record.date,jdbcType=DATE},
+      species = #{record.species,jdbcType=VARCHAR},
+      money = #{record.money,jdbcType=INTEGER},
+      note = #{record.note,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zsy.finance.bean.Spend">
+    update spendinfo
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=DATE},
+      </if>
+      <if test="species != null">
+        species = #{species,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null">
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where spendid = #{spendid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zsy.finance.bean.Spend">
+    update spendinfo
+    set username = #{username,jdbcType=VARCHAR},
+      date = #{date,jdbcType=DATE},
+      species = #{species,jdbcType=VARCHAR},
+      money = #{money,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR}
+    where spendid = #{spendid,jdbcType=INTEGER}
+  </update>
+</mapper>
